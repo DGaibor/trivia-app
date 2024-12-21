@@ -1,12 +1,15 @@
 import {useEffect, useState} from 'react'
 import './App.css'
 import { db } from './firebase.js'
-import { collection, getDocs } from 'firebase/firestore'
+import { collection, getDocs, doc, deleteDoc } from 'firebase/firestore'
 import {Form} from "./component/form/Form.jsx";
+import {useNavigate} from "react-router-dom";
 
 function App() {
     const [users, setUsers] = useState([]);
     const userCollectionRef = collection(db, 'users');
+    const navigate = useNavigate();
+    
     
     const getUsers = async () => {
         const data = await getDocs(userCollectionRef);
@@ -19,6 +22,17 @@ function App() {
             return {...doc.data(), id: doc.id};
             
         })
+    }
+    
+    const viewUser = (id) =>{
+        navigate('/view-user/'+id)
+    }
+    const deleteUser = async (id) => {
+        const userRef = doc(db, "users", id)
+        await deleteDoc(userRef);
+        
+        alert("User deleted successfully");
+        window.location.reload();
     }
     
     useEffect(() => {
@@ -35,6 +49,7 @@ function App() {
                 <th>FirstName</th>
                 <th>LastName</th>
                 <th>Age</th>
+                <th>Actions</th>
             </tr>
 
             </thead>
@@ -45,6 +60,10 @@ function App() {
                     <td>{user.first_name}</td>
                     <td>{user.last_name}</td>
                     <td>{user.age}</td>
+                    <td>
+                        <button onClick={()=>viewUser(user.id)}>View</button>
+                        <button onClick={()=>deleteUser(user.id)}>Delete</button>
+                    </td>
 
                 </tr>
             ))}
