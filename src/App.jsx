@@ -2,6 +2,7 @@ import {useEffect, useState} from 'react'
 import './App.css'
 import { db } from './firebase.js'
 import { collection, getDocs } from 'firebase/firestore'
+import {Form} from "./component/form/Form.jsx";
 
 function App() {
     const [users, setUsers] = useState([]);
@@ -26,16 +27,20 @@ function App() {
     
   return (
     <>
+        <Form/>
         <table border={2}>
             <thead>
-            <th>ID</th>
-            <th>FirstName</th>
-            <th>LastName</th>
-            <th>Age</th>
+            <tr>
+                <th>ID</th>
+                <th>FirstName</th>
+                <th>LastName</th>
+                <th>Age</th>
+            </tr>
+
             </thead>
             <tbody>
-            {users.map((user)=> (
-                <tr>
+            {users.map((user) => (
+                <tr key={user.id}>
                     <td>{user.id}</td>
                     <td>{user.first_name}</td>
                     <td>{user.last_name}</td>
